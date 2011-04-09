@@ -74,7 +74,7 @@
           WHERE [insert where clause as needed]
           </cfquery>
  
-        <cfset email = "email=#FORM.lan_id#@nsf.gov&firstname=#GetPerson.frst_name#&lastname=#GetPerson.last_name#">
+        <cfset email = "email=#FORM.lan_id#@[domain]&firstname=#GetPerson.frst_name#&lastname=#GetPerson.last_name#">
            <cfset thekey = ToBase64("[insertkey]")>
            <cfset cookiestring = Encrypt(email, thekey, "DES", "Base64")>
         <cfcookie name = "[cookiename]" value = "#Now()#" expires = "NOW">
