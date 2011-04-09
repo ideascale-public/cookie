@@ -1,5 +1,5 @@
 <cffunction name="onRequestStart" output="false" returntype="void">
-<cfif not isDefined("cookie.NSFIDEA") OR #Left(cookie.NSFIDEA, "3")# EQ "{ts">   
+<cfif not isDefined("cookie.[cookiename]") OR #Left(cookie.[cookiename], "3")# EQ "{ts">   
     <!--- no cookie, or ts cookie --->
      <cfif action IS "login"> <!---  but they've submitted the form --->
  
@@ -21,16 +21,16 @@
  
           <cfquery name="GetPerson" datasource="staffadmin">
           SELECT     frst_name, last_name
-          FROM  nsfs.pers
-          WHERE lan_id = '#FORM.lan_id#'
+          FROM  [insertuserdbtablename]
+          WHERE [insert where clause as needed]
           </cfquery>
  
-           <cfset email = "email=#FORM.lan_id#@nsf.gov&firstname=#GetPerson.frst_name#&lastname=#GetPerson.last_name#">
+           <cfset email = "email=#FORM.lan_id#@[emaildomain]&firstname=#GetPerson.frst_name#&lastname=#GetPerson.last_name#">
  
-           <cfset thekey = ToBase64("81625091")>
+           <cfset thekey = ToBase64("[insertkey]")>
            <cfset cookiestring = Encrypt(email, thekey, "DES", "Base64")>
-        <CFHEADER name="Set-Cookie" value='NSFIDEA=#cookiestring#;domain=.nsf.gov;path=/;expires='>
-        <cflocation url="http://ideashare.nsf.gov" addtoken="false"> 
+        <CFHEADER name="Set-Cookie" value='[cookiename]=#cookiestring#;domain=[examplekey];path=/;expires='>
+        <cflocation url="[ideascaledomainurl]" addtoken="false"> 
  
      <cfelse>  <!--- authentication failed, back to index page --->
                 <cfset action="badlanid">
@@ -69,18 +69,18 @@
     <cfif  ( (Variables.IDBAUTH_CODE EQ 1) OR (Variables.IDBAUTH_CODE EQ 0) ) >
  
           <cfquery name="GetPerson" datasource="staffadmin">
-            SELECT   frst_name, last_name
-            FROM     nsfs.pers
-            WHERE    lan_id = '#FORM.lan_id#'
+            SELECT     frst_name, last_name
+          FROM  [insertuserdbtablename]
+          WHERE [insert where clause as needed]
           </cfquery>
  
         <cfset email = "email=#FORM.lan_id#@nsf.gov&firstname=#GetPerson.frst_name#&lastname=#GetPerson.last_name#">
-           <cfset thekey = ToBase64("81625091")>
+           <cfset thekey = ToBase64("[insertkey]")>
            <cfset cookiestring = Encrypt(email, thekey, "DES", "Base64")>
-        <cfcookie name = "NSFIDEA" value = "#Now()#" expires = "NOW">
-        <CFHEADER name="Set-Cookie" value='NSFIDEA=#cookiestring#;domain=.nsf.gov;path=/;expires='>
+        <cfcookie name = "[cookiename]" value = "#Now()#" expires = "NOW">
+        <CFHEADER name="Set-Cookie" value='[cookiename]=#cookiestring#;domain=.[cookiename];path=/;expires='>
  
-        <cflocation url="http://ideashare.nsf.gov" addtoken="false"> 
+        <cflocation url="[ideascalecommunitydomain]" addtoken="false"> 
  
      <cfelse>  <!--- authentication failed, back to index page --->
  
